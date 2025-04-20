@@ -1,0 +1,54 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Navbar */
+  .navbar {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(120deg, #f9d423, #ff4e50);
+    padding: 60px 20px;
+    color: #fff;
+    text-align: center;
+    border-radius: 12px;
+  }
+  
+  /* Category Cards */
+  .category-card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  .category-card img {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #212529;
+    color: #ccc;
+  }
+  
