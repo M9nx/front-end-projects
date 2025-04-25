@@ -66,14 +66,14 @@
 
     <script>
 const searchableData = [
-  { title: "Healthy & Tasty Pet Food", description: "Best For your Pets" },
-  { title: "The Journey to Our Passion Fo Pets", description: "Your Pet Will Love" },
-  { title: "Birds Foods", description: "Product" },
-  { title: "Pet Formula", description: "Product" },
-  { title: "Dried Warms", description: "Product" },
-  { title: "Pet Snacks", description: "Product" },
-  { title: "Pet protein", description: "Product" },
-  { title: "Pet Suasages", description: "Product" },
+  { title: "Healthy & Tasty Pet Food", description: "Best For your Pets", url: "index.html#featured-products" },
+  { title: "The Journey to Our Passion Fo Pets", description: "Your Pet Will Love", url: "index.html#about-sec" },
+  { title: "Birds Foods", description: "Product", url: "index.html#featured-products" },
+  { title: "Pet Formula", description: "Product", url: "index.html#featured-products" },
+  { title: "Dried Warms", description: "Product", url: "index.html#featured-products" },
+  { title: "Pet Snacks", description: "Product", url: "index.html#featured-products" },
+  { title: "Pet protein", description: "Product", url: "index.html#featured-products" },
+  { title: "Pet Suasages", description: "Product", url: "index.html#featured-products" },
   // Add more items from your site as needed
 ];
 
@@ -93,7 +93,12 @@ if (query) {
   const resultsDiv = document.getElementById('search-results');
   if (results.length > 0) {
     resultsDiv.innerHTML = results.map(item =>
-      `<div class="mb-3"><strong>${item.title}</strong><br><small>${item.description}</small></div>`
+      `<div class="mb-3">
+        <a href="${item.url}" target="_blank">
+          <strong>${item.title}</strong>
+        </a><br>
+        <small>${item.description}</small>
+      </div>`
     ).join('');
   } else {
     resultsDiv.innerHTML = "<p>No results found.</p>";
