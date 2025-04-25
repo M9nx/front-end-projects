@@ -64,15 +64,41 @@
         </div>
     </main>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const query = params.get('searchInput');
-    if (query) {
-      document.querySelector('input[name="searchInput"]').value = query;
+    <script>
+const searchableData = [
+  { title: "Healthy & Tasty Pet Food", description: "Best For your Pets" },
+  { title: "The Journey to Our Passion Fo Pets", description: "Your Pet Will Love" },
+  { title: "Birds Foods", description: "Product" },
+  { title: "Pet Formula", description: "Product" },
+  { title: "Dried Warms", description: "Product" },
+  { title: "Pet Snacks", description: "Product" },
+  { title: "Pet protein", description: "Product" },
+  { title: "Pet Suasages", description: "Product" },
+  // Add more items from your site as needed
+];
 
-      const cleanQuery = DOMPurify.sanitize(query);
-      document.getElementById('search-query').innerHTML = `<strong>Search for:</strong> ${cleanQuery}`;
-    }
-  </script>
+const params = new URLSearchParams(window.location.search);
+const query = params.get('searchInput');
+if (query) {
+  document.querySelector('input[name="searchInput"]').value = query;
+  const cleanQuery = query.replace(/[<>"']/g, ""); // Simple sanitize
+  document.getElementById('search-query').innerHTML = `<strong>Search for:</strong> ${cleanQuery}`;
+
+  // Search logic
+  const results = searchableData.filter(item =>
+    item.title.toLowerCase().includes(query.toLowerCase()) ||
+    item.description.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const resultsDiv = document.getElementById('search-results');
+  if (results.length > 0) {
+    resultsDiv.innerHTML = results.map(item =>
+      `<div class="mb-3"><strong>${item.title}</strong><br><small>${item.description}</small></div>`
+    ).join('');
+  } else {
+    resultsDiv.innerHTML = "<p>No results found.</p>";
+  }
+}
+</script>
 </body>
 </html>
