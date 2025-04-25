@@ -64,15 +64,15 @@
         </div>
     </main>
 
-    <script>
-      // Display the search query from the URL
-      const params = new URLSearchParams(window.location.search);
-      const query = params.get('searchInput');
-      if (query) {
-        document.querySelector('input[name="searchInput"]').value = query;
-        document.getElementById('search-query').innerHTML = `<strong>Search for:</strong> ${query}`;
-        // You can add your search/filter logic here to display results
-      }
-    </script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('searchInput');
+    if (query) {
+      document.querySelector('input[name="searchInput"]').value = query;
+
+      const cleanQuery = DOMPurify.sanitize(query);
+      document.getElementById('search-query').innerHTML = `<strong>Search for:</strong> ${cleanQuery}`;
+    }
+  </script>
 </body>
 </html>
