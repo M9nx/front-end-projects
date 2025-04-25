@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Petshome</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header (copied from index.html for consistency) -->
+    <header class="header">
+      <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+        <div class="container">
+          <a class="navbar-brand" href="index.html"><img src="img/logo.png" alt="" /></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Category</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="index.html#featured-products">Products</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="index.html#What-Our-ClientsSays">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact Us</a>
+              </li>
+            </ul>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" id="search-icon" class="icon-circle">
+                  <i class="fas fa-search"></i>
+                </a>
+                <a href="#" class="icon-circle">
+                  <i class="fa-solid fa-user"></i>
+                </a>
+                <a href="#" class="icon-circle position-relative">
+                  <i class="fa-solid fa-shopping-cart"></i>
+                  <span class="cart-badge">0</span>
+                </a>
+              </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+        <h2 class="mb-4">Search Results</h2>
+        <form action="search.html" method="get" class="d-flex mb-4">
+            <input type="text" name="searchInput" class="form-control me-2" placeholder="Search ..." value="">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div id="search-query" class="mb-4"></div>
+        <div id="search-results">
+            <!-- Placeholder for search results -->
+            <p>No search results yet. Enter a query above.</p>
+        </div>
+    </main>
+
+    <script>
+      // Display the search query from the URL
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('searchInput');
+      if (query) {
+        document.querySelector('input[name="searchInput"]').value = query;
+        document.getElementById('search-query').innerHTML = `<strong>Search for:</strong> ${query}`;
+        // You can add your search/filter logic here to display results
+      }
+    </script>
+</body>
+</html>
