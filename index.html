@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bug Hunter Notepad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --neon-green: #00ff00;
+      --dark-green: #003300;
+      --matrix-green: #03A062;
+    }
+    
+    textarea { resize: vertical; }
+    summary::-webkit-details-marker { display: none; }
+    summary {
+      cursor: pointer;
+    }
+    body {
+      font-family: 'Fira Code', monospace;
+      background-color: #0a0a0a;
+    }
+    .icon-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5em;
+      text-align: center;
+    }
+    
+    /* Neon effect for icons */
+    .neon-icon {
+      color: var(--neon-green);
+      text-shadow: 0 0 5px var(--neon-green),
+                   0 0 10px var(--neon-green),
+                   0 0 20px var(--neon-green);
+    }
+    
+    /* Matrix-like animation for certain elements */
+    @keyframes matrixGlow {
+      0% { text-shadow: 0 0 5px var(--neon-green); }
+      50% { text-shadow: 0 0 20px var(--neon-green); }
+      100% { text-shadow: 0 0 5px var(--neon-green); }
+    }
+    
+    .matrix-effect {
+      animation: matrixGlow 2s infinite;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--matrix-green);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-green);
+    }
+
+    /* Input and textarea styling */
+    input, textarea {
+      background-color: #111111 !important;
+      border-color: var(--matrix-green) !important;
+      color: var(--neon-green) !important;
+    }
+
+    input:focus, textarea:focus {
+      box-shadow: 0 0 10px var(--neon-green);
+      outline: none !important;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0a0a] text-[#00ff00] min-h-screen">
+  <div class="flex min-h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 bg-[#111111] p-4 border-r border-[#03A062] flex flex-col">
+      <h2 class="text-[#00ff00] text-xl font-bold mb-4 text-center matrix-effect">
+        <i class="fas fa-crosshairs neon-icon"></i> Bug Hunter Notepad
+      </h2>
+
+      <input id="newCategory" type="text" placeholder="New category..."
+        class="bg-[#111111] border border-[#03A062] p-2 rounded w-full mb-2 placeholder-[#03A062]" />
+      <button onclick="addCategory()" class="w-full bg-[#003300] hover:bg-[#004400] px-4 py-2 rounded mb-4 transition-all duration-300">
+        <i class="fas fa-plus neon-icon"></i> Add Category
+      </button>
+
+      <nav id="sidebarMenu" class="flex-1 mt-2 space-y-2 text-sm overflow-auto">
+        <!-- Dynamic category links will be injected here -->
+      </nav>
+
+      <div class="mt-4 space-y-2">
+        <button onclick="exportData()" class="w-full bg-[#003300] hover:bg-[#004400] px-4 py-2 rounded text-sm transition-all duration-300">
+          <i class="fas fa-download neon-icon"></i> Export Notes
+        </button>
+        <label for="importFile" class="w-full block bg-[#003300] hover:bg-[#004400] px-4 py-2 rounded text-center cursor-pointer text-sm transition-all duration-300">
+          <i class="fas fa-upload neon-icon"></i> Import Notes
+        </label>
+        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)" />
+        <button onclick="deleteAllData()" class="w-full bg-[#330000] hover:bg-[#440000] px-4 py-2 rounded text-sm mt-2 transition-all duration-300">
+          <i class="fas fa-trash-alt neon-icon"></i> Delete All Data
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto bg-[#0a0a0a]">
+      <div id="categories" class="space-y-6"></div>
+
+      <footer class="text-center text-xs text-[#03A062] mt-10">
+        Data saved locally in your browser &mdash; Made by <span class="text-[#00ff00] matrix-effect">Theboys</span>
+      </footer>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="w-64 bg-[#111111] p-4 border-l border-[#03A062] overflow-y-auto">
+      <h2 class="text-[#00ff00] text-lg font-bold mb-4 text-center matrix-effect">
+        <i class="fas fa-tools neon-icon"></i> Helper Tools
+      </h2>
+      <ul class="space-y-2 text-sm">
+        <li><a href="https://nemocyberworld.github.io/BugBountyCheckList/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-clipboard-list neon-icon"></i> Bug Bounty Checklist
+        </a></li>
+        <li><a href="https://receive-smss.com/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-phone neon-icon"></i> Temporary Phone Numbers
+        </a></li>
+        <li><a href="https://nemocyberworld.github.io/CMP-Dorker/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-search neon-icon"></i> Dorking Tools
+        </a></li>
+        <li><a href="https://nemocyberworld.github.io/BugBountyCheckList/Reconnaissance/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-satellite neon-icon"></i> Reconnaissance
+        </a></li>
+        <li><a href="https://www.shodan.io" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-globe neon-icon"></i> Shodan
+        </a></li>
+        <li><a href="https://crt.sh" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-shield-alt neon-icon"></i> crt.sh
+        </a></li>
+        <li><a href="https://hunter.io" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-crosshairs neon-icon"></i> Hunter.io
+        </a></li>
+        <li><a href="https://www.exploit-db.com" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-bug neon-icon"></i> Exploit DB
+        </a></li>
+        <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-rocket neon-icon"></i> PayloadsAllTheThings
+        </a></li>
+        <li><a href="https://osintframework.com" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-user-secret neon-icon"></i> OSINT Framework
+        </a></li>
+        <li><a href="https://gf.dev" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-wrench neon-icon"></i> GF Pattern Generator
+        </a></li>
+        <li><a href="https://www.revshells.com" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-terminal neon-icon"></i> Reverse Shell Generator
+        </a></li>
+        <li><a href="https://temp-mail.org/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-envelope neon-icon"></i> Temporary Email
+        </a></li>
+        <li><a href="https://www.crunchbase.com/" target="_blank" class="text-[#03A062] hover:text-[#00ff00] transition-all duration-300">
+          <i class="fas fa-database neon-icon"></i> Crunchbase
+        </a></li>
+      </ul>
+    </aside>
+  </div>
+
+  <script>
+    // Data structure:
+    // categories: {
+    //   categoryName: {
+    //     subcategories: {
+    //       subcategoryName: [
+    //         { title: '', note: '' }
+    //       ]
+    //     }
+    //   }
+    // }
+    let data = JSON.parse(localStorage.getItem('bugHunterData')) || {};
+    let selectedCategory = null;
+
+    function saveData() {
+      localStorage.setItem('bugHunterData', JSON.stringify(data));
+    }
+
+    // Add new category
+    function addCategory() {
+      const name = document.getElementById('newCategory').value.trim();
+      if (!name) return alert("Category name cannot be empty!");
+      if (data[name]) return alert("Category already exists!");
+      data[name] = { subcategories: {} };
+      document.getElementById('newCategory').value = '';
+      saveData();
+      renderSidebar();
+      renderCategories();
+    }
+
+    // Add subcategory inside category
+    function addSubcategory(category) {
+      const name = prompt("Enter subcategory name:");
+      if (!name) return;
+      if (data[category].subcategories[name]) {
+        alert("Subcategory already exists!");
+        return;
+      }
+      data[category].subcategories[name] = [];
+      saveData();
+      renderCategories();
+    }
+
+    // Add item inside category/subcategory
+    function addItem(category, subcategory) {
+      const title = prompt("Enter item title:");
+      if (!title) return;
+      data[category].subcategories[subcategory].push({ title, note: '' });
+      saveData();
+      renderCategories();
+    }
+
+    // Delete item
+    function deleteItem(category, subcategory, index) {
+      if (!confirm("Delete this item?")) return;
+      data[category].subcategories[subcategory].splice(index, 1);
+      saveData();
+      renderCategories();
+    }
+
+    // Delete subcategory
+    function deleteSubcategory(category, subcategory) {
+      if (!confirm(`Delete subcategory "${subcategory}" and all its items?`)) return;
+      delete data[category].subcategories[subcategory];
+      saveData();
+      renderCategories();
+    }
+
+    // Delete category
+    function deleteCategory(category) {
+      if (!confirm(`Delete entire category "${category}" and all its subcategories?`)) return;
+      delete data[category];
+      saveData();
+      renderSidebar();
+      renderCategories();
+    }
+
+    // Update note text for an item
+    function updateNote(category, subcategory, index, value) {
+      data[category].subcategories[subcategory][index].note = value;
+      saveData();
+    }
+
+    // Render sidebar with categories (click to select)
+    function renderSidebar() {
+      const nav = document.getElementById('sidebarMenu');
+      nav.innerHTML = '';
+      Object.keys(data).forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between items-center';
+
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        btn.className = 'text-left px-3 py-2 rounded hover:bg-green-700 flex-1 ' + (selectedCategory === cat ? 'bg-green-700' : '');
+        btn.onclick = () => {
+          selectedCategory = cat;
+          renderSidebar();
+          renderCategories();
+        };
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '🗑️';
+        delBtn.title = `Delete category "${cat}"`;
+        delBtn.className = 'text-red-500 hover:text-red-700 ml-2';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteCategory(cat);
+        };
+
+        div.appendChild(btn);
+        div.appendChild(delBtn);
+        nav.appendChild(div);
+      });
+    }
+
+    // Render main categories, subcategories, and items with collapsible details
+    function renderCategories() {
+      const container = document.getElementById('categories');
+      container.innerHTML = '';
+      const categoriesToRender = selectedCategory ? [selectedCategory] : Object.keys(data);
+
+      categoriesToRender.forEach(category => {
+        const section = document.createElement('section');
+        section.className = 'bg-[#111111] rounded-lg p-4 border border-[#03A062]';
+
+        const header = document.createElement('div');
+        header.className = 'flex justify-between items-center mb-2';
+        header.innerHTML = `
+          <h2 class="text-2xl text-[#00ff00] font-bold flex items-center gap-2">
+            <i class="fas fa-folder neon-icon"></i> ${category}
+          </h2>
+          <div>
+            <button onclick="addSubcategory('${category}')" class="bg-[#003300] hover:bg-[#004400] px-3 py-1 rounded text-sm mr-2 transition-all duration-300">
+              <i class="fas fa-plus neon-icon"></i> Add Subcategory
+            </button>
+            <button onclick="deleteCategory('${category}')" class="bg-[#330000] hover:bg-[#440000] px-3 py-1 rounded text-sm transition-all duration-300">
+              <i class="fas fa-trash-alt neon-icon"></i> Delete Category
+            </button>
+          </div>
+        `;
+        section.appendChild(header);
+
+        // Container for subcategories
+        const subcatContainer = document.createElement('div');
+        subcatContainer.className = 'space-y-4 mt-2';
+
+        const subcategories = data[category].subcategories;
+        if (Object.keys(subcategories).length === 0) {
+          // If no subcategories, show a message
+          const msg = document.createElement('p');
+          msg.className = 'text-gray-500 italic';
+          msg.textContent = 'No subcategories. Add one above!';
+          subcatContainer.appendChild(msg);
+        } else {
+          // Render subcategories
+          Object.keys(subcategories).forEach(subcat => {
+            const details = document.createElement('details');
+            details.className = 'bg-[#0a0a0a] border border-[#03A062] rounded p-4';
+            // Open by default only if this category is selected and no others opened yet
+            details.open = false;
+
+            const summary = document.createElement('summary');
+            summary.className = 'flex justify-between items-center cursor-pointer text-[#00ff00] font-semibold text-lg matrix-effect';
+            summary.innerHTML = `
+              <span>${subcat}</span>
+              <button class="text-[#ff0000] hover:text-[#ff3333] ml-2 text-sm transition-all duration-300">
+                <i class="fas fa-trash-alt neon-icon"></i>
+              </button>
+            `;
+
+            // Delete subcategory button
+            const delSubcatBtn = document.createElement('button');
+            delSubcatBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            delSubcatBtn.title = `Delete subcategory "${subcat}"`;
+            delSubcatBtn.className = 'text-red-500 hover:text-red-700 ml-2 text-sm';
+            delSubcatBtn.onclick = (e) => {
+              e.stopPropagation();
+              deleteSubcategory(category, subcat);
+            };
+
+            summary.appendChild(delSubcatBtn);
+            details.appendChild(summary);
+
+            // Button to add item inside this subcategory
+            const addItemBtn = document.createElement('button');
+            addItemBtn.className = 'bg-[#003300] hover:bg-[#004400] px-3 py-1 rounded text-sm my-2 transition-all duration-300';
+            addItemBtn.innerHTML = '<i class="fas fa-plus neon-icon"></i> Add Item';
+            addItemBtn.onclick = () => addItem(category, subcat);
+
+            details.appendChild(addItemBtn);
+
+            // List items inside subcategory
+            const itemList = document.createElement('div');
+            itemList.className = 'space-y-4 mt-2';
+
+            subcategories[subcat].forEach((item, idx) => {
+              const itemDetails = document.createElement('details');
+              itemDetails.className = 'bg-[#111111] border border-[#03A062] rounded p-3';
+
+              const itemSummary = document.createElement('summary');
+              itemSummary.className = 'flex justify-between items-center cursor-pointer text-[#00ff00] font-medium';
+              itemSummary.innerHTML = `
+                <span>${item.title}</span>
+                <button class="text-[#ff0000] hover:text-[#ff3333] ml-2 text-xs transition-all duration-300">
+                  <i class="fas fa-trash-alt neon-icon"></i>
+                </button>
+              `;
+
+              // Delete item button
+              const delItemBtn = document.createElement('button');
+              delItemBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+              delItemBtn.title = `Delete item "${item.title}"`;
+              delItemBtn.className = 'text-red-400 hover:text-red-600 ml-2 text-xs';
+              delItemBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteItem(category, subcat, idx);
+              };
+
+              itemSummary.appendChild(delItemBtn);
+              itemDetails.appendChild(itemSummary);
+
+              // Note textarea
+              const textarea = document.createElement('textarea');
+              textarea.className = 'w-full bg-[#0a0a0a] border border-[#03A062] p-2 rounded mt-2 resize-y text-[#00ff00]';
+              textarea.rows = 5;
+              textarea.value = item.note;
+              textarea.oninput = (e) => updateNote(category, subcat, idx, e.target.value);
+
+              itemDetails.appendChild(textarea);
+
+              itemList.appendChild(itemDetails);
+            });
+
+            details.appendChild(itemList);
+            subcatContainer.appendChild(details);
+          });
+        }
+
+        section.appendChild(subcatContainer);
+        container.appendChild(section);
+      });
+    }
+
+    // EXPORT DATA FUNCTION
+    function exportData() {
+      const dataStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bughunter_notes_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // IMPORT DATA FUNCTION
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (typeof importedData === 'object' && importedData !== null) {
+            data = importedData;
+            selectedCategory = null;
+            saveData();
+            renderSidebar();
+            renderCategories();
+            alert('Notes imported successfully!');
+          } else {
+            alert('Invalid file format.');
+          }
+        } catch {
+          alert('Error parsing JSON.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    // DELETE ALL DATA FUNCTION
+    function deleteAllData() {
+      if (confirm("⚠️ WARNING: Are you sure you want to DELETE ALL your notes and categories? This action cannot be undone.")) {
+        data = {};
+        selectedCategory = null;
+        localStorage.removeItem('bugHunterData');
+        renderSidebar();
+        renderCategories();
+      }
+    }
+
+    // Initial render
+    renderSidebar();
+    renderCategories();
+  </script>
+</body>
+</html>
